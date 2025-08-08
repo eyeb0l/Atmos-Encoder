@@ -5,7 +5,8 @@ import subprocess
 import sys
 import time
 from colorama import Fore, Style, init
-from ddp_config import create_xml_5_1_atmos, create_xml_7_1_atmos, create_xml_5_1
+from atmos_editor import process_atmos_file
+from ddp_config import create_xml_5_1, create_xml_5_1_atmos, create_xml_7_1_atmos
 
 init(autoreset=True)
 
@@ -19,6 +20,9 @@ def check_executable(filename, display_name):
     return path
 
 def run_dee(xml_path, output_path="."):
+    def format_time(seconds):
+        return time.strftime("%H:%M:%S", time.gmtime(int(seconds)))
+
     def calculate_remaining_time(elapsed_time, progress):
         if progress == 0:
             return 0
@@ -28,7 +32,10 @@ def run_dee(xml_path, output_path="."):
     def print_progress_bar(progress, elapsed_time=0, remaining_time=0, length=40):
         filled_length = int(length * progress // 100)
         bar = '■' * filled_length + '-' * (length - filled_length)
-        sys.stdout.write(f"\r[{bar}] {progress:.1f}% (elapsed: {int(elapsed_time)}s, remaining: {int(remaining_time)}s)")
+        sys.stdout.write(
+            f"\r[{bar}] {progress:.1f}% "
+            f"(elapsed: {format_time(elapsed_time)}, remaining: {format_time(remaining_time)})"
+        )
         sys.stdout.flush()
 
     xml_full_path = os.path.join(output_path, xml_path) if not os.path.isabs(xml_path) else xml_path
@@ -47,7 +54,9 @@ def run_dee(xml_path, output_path="."):
         process.wait()
         bar = '■' * 40
         elapsed_time = time.time() - start_time
-        sys.stdout.write(f"\r[{bar}] 100.0% (elapsed: {int(elapsed_time)}s, remaining: 0s)\n")
+        sys.stdout.write(
+            f"\r[{bar}] 100.0% (elapsed: {format_time(elapsed_time)}, remaining: 00:00:00)\n"
+        )
         sys.stdout.flush()
 
     except Exception as e:
@@ -57,6 +66,7 @@ def run_dee(xml_path, output_path="."):
             process.terminate()
         except:
             pass
+
 
 parser = argparse.ArgumentParser(description="Decode a TrueHD .thd file using truehdd.exe")
 parser.add_argument("-i", "--input", required=True, help="Path to the input .thd file")
@@ -158,6 +168,7 @@ for file in os.listdir(script_dir):
 
         if new_name == "ddp_encode.atmos":
             decoded_atmos_file = new_name
+            process_atmos_file(path(decoded_atmos_file))
 
         print(f"{Fore.GREEN}[OK]{Style.RESET_ALL} Moved ATMOS file to: {target_path}")
 
