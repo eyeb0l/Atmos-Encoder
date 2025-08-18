@@ -11,7 +11,7 @@
 ---
 It automatically detects whether the input `.thd` file contains Atmos audio and generates two output versions:  
 - Dolby Digital Plus 5.1 with Atmos (`_atmos_5_1.mp4`)  
-- Dolby Digital Plus 7.1 (`_atmos_7_1.mp4`)
+- Dolby Digital Plus 7.1 with Atmos (_atmos_7_1)
 
 If no Atmos is detected, it creates a standard 5.1 DDP file.
 
@@ -43,7 +43,7 @@ If no Atmos is detected, it creates a standard 5.1 DDP file.
 Run the encoder with:
 
 ```bash
-python main.py -i input_file.thd -ba 1024 -b7 1664
+python main.py -i input_file.thd -ba 1024 -b7 1664 -w normal
 ```
 
 ### Optional bitrate parameters
@@ -51,7 +51,7 @@ python main.py -i input_file.thd -ba 1024 -b7 1664
 | Parameter                    | Description                                | Default | Allowed Values           |
 | ---------------------------- | ------------------------------------------ | ------- | ------------------------ |
 | `-bd`, `--bitrate-ddp`       | Bitrate for standard DDP 5.1 output (kbps) | 1024    | 256, 384, 448, 640, 1024 |
-| `-ba`, `--bitrate-atmos-5-1` | Bitrate for Atmos 5.1 track (kbps)         | 768     | 640, 768, 1024           |
+| `-ba`, `--bitrate-atmos-5-1` | Bitrate for Atmos 5.1 track (kbps)         | 1024    | 640, 768, 1024           |
 | `-b7`, `--bitrate-atmos-7-1` | Bitrate for Atmos 7.1 track (kbps)         | 1536    | 1152, 1280, 1536, 1664   |
 
 ---
