@@ -70,10 +70,16 @@ def run_dee(xml_path, output_path="."):
 # --- Argument parser ---
 parser = argparse.ArgumentParser(description="Decode TrueHD and produce DDP outputs, with Dolby Atmos support")
 parser.add_argument("-i", "--input", required=True, help="Path to the input TrueHD (.thd) file")  # Input file
-parser.add_argument("-bd", "--bitrate-ddp", type=int, choices=[256, 384, 448, 640, 1024], default=1024, help="Set bitrate for DDP tracks (options: 256, 384, 448, 640, 1024; default: 1024)")  # DDP bitrate
-parser.add_argument("-ba", "--bitrate-atmos-5-1", type=int, choices=[640, 768, 1024], default=1024, help="Set bitrate for Dolby Atmos 5.1 tracks (options: 640, 768, 1024; default: 768)")  # Atmos 5.1 bitrate
-parser.add_argument("-b7", "--bitrate-atmos-7-1", type=int, choices=[1152, 1280, 1536, 1664], default=1536, help="Set bitrate for Dolby Atmos 7.1 tracks (options: 1152, 1280, 1536, 1664; default: 1536)")  # Atmos 7.1 bitrate
-parser.add_argument("-w", "--warp-mode", choices=["normal", "warping", "prologiciix", "loro"], default="normal", help="Set the warp mode for decoding TrueHD (normal=Direct render, warping=Direct render with room balance, prologiciix=Dolby Pro Logic IIx, loro=Standard Lo/Ro)")  # Warp mode
+parser.add_argument("-bd", "--bitrate-ddp", type=int, choices=[256, 384, 448, 640, 1024], default=1024,
+                    help="Set bitrate for DDP tracks (options: 256, 384, 448, 640, 1024; default: 1024)")  # DDP bitrate
+parser.add_argument("-ba", "--bitrate-atmos-5-1", type=int, choices=[640, 768, 1024], default=1024,
+                    help="Set bitrate for Dolby Atmos 5.1 tracks (options: 640, 768, 1024; default: 1024)")  # Atmos 5.1 bitrate
+parser.add_argument("-b7", "--bitrate-atmos-7-1", type=int, choices=[1152, 1280, 1536, 1664], default=1536,
+                    help="Set bitrate for Dolby Atmos 7.1 tracks (options: 1152, 1280, 1536, 1664; default: 1536)")  # Atmos 7.1 bitrate
+parser.add_argument("-w", "--warp-mode", choices=["normal", "warping", "prologiciix", "loro"], default="normal",
+                    help="Set the warp mode for decoding TrueHD (normal=Direct render, warping=Direct render with room balance, prologiciix=Dolby Pro Logic IIx, loro=Standard Lo/Ro)")  # Warp mode
+parser.add_argument("-bc", "--bed-conform", action="store_true", default=True,
+                    help="Enable bed conformance for Atmos content by default (adds --bed-conform to decode command)")
 args = parser.parse_args()
 
 # --- Resolve input and output paths ---
@@ -126,9 +132,10 @@ if atmos_flag == "true":
 
 # --- Build TrueHDD decode command ---
 command = [truehdd_path, "decode", "--progress", input_file, "--output-path", output_path]
-
 if atmos_flag == "true":
     command.extend(["--warp-mode", args.warp_mode])
+    if args.bed_conform:
+        command.append("--bed-conform")
 else:
     command.extend(["--format", "pcm"])
 
