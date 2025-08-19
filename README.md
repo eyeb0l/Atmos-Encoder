@@ -43,7 +43,7 @@ If no Atmos is detected, it creates a standard 5.1 DDP file.
 Run the encoder with:
 
 ```bash
-python main.py -i input_file.thd -ba 1024 -b7 1664 -w normal
+python main.py -i input_file.thd -ba 1024 -b7 1664 -w normal -bc
 ```
 
 ### Optional bitrate parameters
