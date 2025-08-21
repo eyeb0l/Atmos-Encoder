@@ -2,6 +2,9 @@ import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
+def print_saved_xml(path):
+    print(f"XML written to: {os.path.basename(path)}")
+
 def prettify(elem):
     rough_string = ET.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
@@ -80,7 +83,7 @@ def create_xml_5_1_atmos(output_path, atmos_file, mp4_file, data_rate, xml_filen
     with open(xml_file_path, "w", encoding="utf-8") as f:
         f.write(xml_str)
 
-    print(f"XML written to: {xml_file_path}")
+    print_saved_xml(xml_file_path)
 
 def create_xml_7_1_atmos(output_path, atmos_file, mp4_file, data_rate, xml_filename):
     root = ET.Element("job_config")
@@ -159,7 +162,7 @@ def create_xml_7_1_atmos(output_path, atmos_file, mp4_file, data_rate, xml_filen
     with open(xml_file_path, "w", encoding="utf-8") as f:
         f.write(xml_str)
 
-    print(f"XML written to: {xml_file_path}")
+    print_saved_xml(xml_file_path)
 
 
 def create_xml_5_1(output_path, atmos_file, ec3_file, data_rate, xml_filename):
@@ -239,5 +242,5 @@ def create_xml_5_1(output_path, atmos_file, ec3_file, data_rate, xml_filename):
     xml_path = os.path.join(output_path, xml_filename)
     with open(xml_path, "w", encoding="utf-8") as f:
         f.write(xml_str)
-
-    print(f"XML written to: {xml_path}")
+        
+    print_saved_xml(xml_path)
